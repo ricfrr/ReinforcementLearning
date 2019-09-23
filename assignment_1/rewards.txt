@@ -1,0 +1,13 @@
+reward for different task
+
+centred : -\operatorname{abs}\left(\tanh\left(2\left(x-v\right)\right)\right)+1
+
+shifted : \frac{\tanh\left(4\left(x+1\right)+2\right)-\tanh\left(4\left(x+1\right)-2\right)}{4}
+
+velocity : \left(\frac{\left(\tanh\left(2x+4\right)-\tanh\left(3x+2\right)\right)+\tanh\left(3x-2\right)-\tanh\left(2x-4\right)}{4}\right)
+
+            \left(\frac{\left(\tanh\left(2x+4\right)-\tanh\left(7x+2\right)\right)+\tanh\left(7x-2\right)-\tanh\left(2x-4\right)}{4}\right)
+
+
+possible position : -\operatorname{abs}\left(\tanh\left(2\left(x-v\right)\right)\right)+1
+                    -\operatorname{abs}\left(\tanh\left(2\left(x-v\right)\right)\right)+1
