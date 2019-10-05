@@ -8,6 +8,7 @@ import pandas as pd
 import sys
 from agent import Agent, Policy
 from utils import get_space_dim
+import datetime
 
 
 # Parse script arguments
@@ -97,7 +98,7 @@ def train(position, agent, env, train_episodes, early_stop=True, render=False,
 
 
 # Function to test a trained policy
-def test(agent, env, episodes, render=False):
+def test(position,agent, env, episodes, render=False):
     test_reward, test_len = 0, 0
     for ep in range(episodes):
         done = False
@@ -110,7 +111,7 @@ def test(agent, env, episodes, render=False):
             action, _ = agent.get_action(observation, evaluation=True)
             observation, reward, done, info = env.step(action)
             # TODO: New reward function
-            # reward = new_reward(observation)
+            reward = new_reward(observation, position)
             print(observation)
             if render:
                 env.render()
@@ -121,14 +122,9 @@ def test(agent, env, episodes, render=False):
 
 # TODO: Definition of the modified reward function
 def new_reward(state, position):
-    #return np.exp(np.abs(state[1]))/8 + 0.2
-    #return  (np.tanh(2*state[1] + 4) - np.tanh(15*state[1] - 2)+ np.tanh(15*state[1] -2) -np.tanh(2*state[1]-4))/2 
-    #return (np.tanh(4*(state[0]+1) + 2) - np.tanh(4*(state[0]+1) - 2))/4 +0.2
     
-    #return -np.abs(np.tanh( 2*(state[1] - 1 ) ))+ -np.abs(np.tanh( 2*(state[1] +1  ) ))+1
-    
-    #return -np.abs(np.tanh( (state[0]- int(sys.argv[2]) ) ))+1 # function for the shifted and the stabilized position position 
-    return -np.abs(np.tanh( (state[0]- position ) ))+1
+    #return np.abs(np.tanh(state[1]))+1 # reward function for velocity
+    return -np.abs(np.tanh( (state[0]- position ) ))+1 #reward function for position
 
 # The main function
 def main(args):
@@ -137,7 +133,7 @@ def main(args):
     
     # Exercise 1
     # TODO: For CartPole-v0 - maximum episode length
-    env._max_episode_steps = 500
+    env._max_episode_steps = 1000
 
     # Get dimensionalities of actions and observations
     action_space_dim = get_space_dim(env.action_space)
@@ -159,7 +155,8 @@ def main(args):
         training_history = train(args.position,agent, env, args.train_episodes, False, args.render_training)
 
         # Save the model
-        model_file = "%s_params.mdl" % args.env
+        tt =str(datetime.datetime.now().date())+ "-"+str(datetime.datetime.now().hour)+ "-"+str(datetime.datetime.now().minute)
+        model_file = "%s_params.mdl" % (args.env+tt+"vel") 
         torch.save(policy.state_dict(), model_file)
         print("Model saved to", model_file)
 
@@ -168,14 +165,17 @@ def main(args):
         sns.lineplot(x="episode", y="mean_reward", data=training_history)
         plt.legend(["Reward", "100-episode average"])
         plt.title("Reward history (%s)" % args.env)
+         # time and day of plot
+        plt.savefig("train_history"+tt+"vel"+".jpg")
         plt.show()
+
         print("Training finished.")
     else:
         print("Loading model from", args.test, "...")
         state_dict = torch.load(args.test)
         policy.load_state_dict(state_dict)
         print("Testing...")
-        test(agent, env, args.train_episodes, args.render_test)
+        test(args.position, agent, env, args.train_episodes, args.render_test)
 
 
 # Entry point of the script

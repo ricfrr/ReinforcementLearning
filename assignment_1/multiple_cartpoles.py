@@ -29,6 +29,8 @@ def parse_args(args=sys.argv[1:]):
     parser.add_argument("--render_training", action='store_true',
                         help="Render each frame during training. Will be slower.")
     parser.add_argument("--render_test", action='store_true', help="Render test")
+    parser.add_argument("--position", type=int, default=0,
+                        help="position where the cartpole will be balanced")
     return parser.parse_args(args)
 
 
@@ -50,7 +52,7 @@ def trainer(fargs):
     policy = Policy(observation_space_dim, action_space_dim)
     agent = Agent(policy)
 
-    training_history = train(agent, env, args.train_episodes, silent=True,
+    training_history = train(args.position, agent, env, args.train_episodes, silent=True,
                              train_run_id=trainer_id, early_stop=False)
 
     print("Trainer id", trainer_id, "finished")
@@ -83,7 +85,7 @@ def main(args):
     sns.lineplot(x="episode", y="reward", hue="train_run_id", data=smaller_df,
                  dashes=[(2,2)]*n_show, palette="Set2", style="train_run_id")
     plt.title("Training performance")
-    plt.savefig("training.png")
+    plt.savefig("training_vel.png")
     plt.show()
 
 
