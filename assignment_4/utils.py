@@ -36,7 +36,7 @@ def plot_rewards(rewards):
     plt.figure(2)
     plt.clf()
     rewards_t = torch.tensor(rewards, dtype=torch.float)
-    plt.title('Training...')
+    plt.title('Training')
     plt.xlabel('Episode')
     plt.ylabel('Cumulative reward')
     plt.grid(True)

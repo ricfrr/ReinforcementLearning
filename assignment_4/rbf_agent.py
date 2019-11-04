@@ -50,7 +50,6 @@ class Agent(object):
         if len(state.shape) == 1:
             state = state.reshape(1, -1)
         # Task 1: TODO: Use (s, abs(s)) as features
-     
         #return np.concatenate((state, np.abs(state)), axis=1)
         # RBF features
         return self.featurizer.transform(self.scaler.transform(state) )
@@ -83,7 +82,6 @@ class Agent(object):
             target = reward 
         else:
             target = reward + self.gamma *np.max(next_qs)
-        #print(target)
         # Update Q-value estimation
         self.q_functions[action].partial_fit(featurized_state, [target])
 
@@ -123,10 +121,6 @@ class Agent(object):
 
         # Calculate the updated target values
         # Task 2: TODO: Calculate target based on rewards and next_qs
-        #print(next_qs.shape)
-        #print(dones.shape)
-        #print(dones)
-        #print(rewards.shape)
         targets = rewards + self.gamma * next_qs * np.invert(dones)
         
 
