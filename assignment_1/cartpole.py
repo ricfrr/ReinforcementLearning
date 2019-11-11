@@ -121,8 +121,7 @@ def test(position,agent, env, episodes, render=False):
 
 
 # TODO: Definition of the modified reward function
-def new_reward(state, position):
-    
+def new_reward(state, position): 
     #return np.abs(np.tanh(state[1]))+1 # reward function for velocity
     return -np.abs(np.tanh( (state[0]- position ) ))+1 #reward function for position
 
